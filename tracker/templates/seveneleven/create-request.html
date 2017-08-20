@@ -1,0 +1,116 @@
+{% extends "base.html" %}{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+
+{% block css %}
+
+{{ block.super }}
+<link href="{% static 'css/plugins/footable/footable.core.css' %}" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block javascript %}
+
+{{ block.super }}
+
+<script src="{% static 'js/plugins/footable/footable.all.min.js' %}"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+
+        $('.footable').footable();
+
+    });
+</script>
+
+<script type="text/javascript">
+  $('select').select2();
+</script>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-9">
+    <div class="row">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>7-11 Store Request List</h5>
+        </div>
+        <div class="ibox-content">
+          <input type="text" class="form-control input-sm m-b-xs" id="filter"
+                 placeholder="Search 7-11 Requests">
+          <table class="footable table table-stripped toggle-arrow-tiny"
+            data-page-size="15" data-filter=#filter>
+            <thead>
+              <tr>
+                <th data-toggle="true">Request ID</th>
+                <th>Requesting Store</th>
+                <th>Request Date</th>
+                <th data-hide="all">Request Created By</th>
+                <th>Assigned Driver</th>
+                <th>Invoice No.</th>
+                <th>Confirm Delivery</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for request in storerequests %}
+              <tr>
+                <td>{{request.id}}</td>
+                <td>{{request.requesting_store.store_no}}</td>
+                <td>{{request.request_date}}</td>
+                <td>{{request.request_created_by}}</td>
+                <td>{{request.assigned_driver}}</td>
+                <td><input type="text" id="{{request.id}}"/></td>
+                <td><button type="button" class="btn btn-primary" id="{{request.id}}">Confirm</button></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="5">
+                    <ul class="pagination pull-right"></ul>
+                </td>
+            </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-md-3">
+    {% if form.errors %}
+      <div class="ibox float-e-margins">
+          <div class="ibox-title">
+            <h5>ERROR validating form</h5>
+          </div>
+          <div class="ibox-content">
+            {% for error in errorlist %}
+              <div>
+                {{ error }}
+              </div>
+            {% endfor %}
+
+          </div>
+      </div>
+    {% endif %}
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Add Store Request</h5>
+        </div>
+        <div class="ibox-content">
+
+          {% crispy form %}
+        </div>
+      </div>
+
+  </div>
+
+</div>
+
+{% endblock %}

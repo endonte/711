@@ -1,0 +1,108 @@
+{% extends "base.html" %}{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block css %}
+
+{{ block.super }}
+<link href="{% static 'css/plugins/footable/footable.core.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block javascript %}
+
+{{ block.super }}
+
+<script src="{% static 'js/plugins/footable/footable.all.min.js' %}"></script>
+
+<script>
+    $(document).ready(function() {
+
+        $('.footable').footable();
+
+    });
+
+</script>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-9">
+    <div class="row">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>7-11 Store List</h5>
+        </div>
+        <div class="ibox-content">
+          <input type="text" class="form-control input-sm m-b-xs" id="filter"
+                 placeholder="Search 7-11 Stores">
+          <table class="footable table table-stripped toggle-arrow-tiny"
+            data-page-size="15" data-filter=#filter>
+            <thead>
+              <tr>
+                <th data-toggle="true">Store #</th>
+                <th>Contact Number</th>
+                <th>District/Area</th>
+                <th data-hide="all">Address Line 1</th>
+                <th data-hide="all">Address Line 2</th>
+                <th data-hide="all">Postal Code</th>
+                <th>Assigned Driver</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for store in stores %}
+              <tr>
+                <td>{{store.store_no}}</td>
+                <td>{{store.store_contact_no}}</td>
+                <td>{{store.store_district_area}}</td>
+                <td>{{store.store_address1}}</td>
+                <td>{{store.store_address2}}</td>
+                <td>{{store.store_postal}}</td>
+                <td>{{store.assigned_driver}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="5">
+                    <ul class="pagination pull-right"></ul>
+                </td>
+            </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-md-3">
+    {% if form.errors %}
+      <div class="ibox float-e-margins">
+          <div class="ibox-title">
+            <h5>ERROR validating form</h5>
+          </div>
+          <div class="ibox-content">
+            {% for error in errorlist %}
+              <div>
+                {{ error }}
+              </div>
+            {% endfor %}
+
+          </div>
+      </div>
+    {% endif %}
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Add Store</h5>
+        </div>
+        <div class="ibox-content">
+          {% crispy form %}
+        </div>
+      </div>
+
+  </div>
+
+</div>
+
+{% endblock %}
